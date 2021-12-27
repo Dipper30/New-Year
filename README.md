@@ -1,2 +1,9 @@
-# New-Year
-A single-page application for New Year Celebrition
+# DBProjectFrontEnd
+
+## Install Dependencies
+
+npm install
+
+## Start Program
+
+npm run start
