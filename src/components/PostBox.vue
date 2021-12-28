@@ -58,7 +58,6 @@ export default {
       font-size: 20px;
       line-height: 20px;
       color: rgba(49, 46, 46, 0.8);
-      /* color: rgba(229, 229, 229, 0.21); */
     }
     &:focus {
       box-shadow: inset 0px 0px 20px 10px rgba(0, 0, 0, 0.6);

@@ -36,3 +36,7 @@ export const getMessages = () => {
 export const checkMessage = (p) => {
   return post('/checkMessage', p)
 }
+
+export const postFeedback = (p) => {
+  return post('/feedback', p)
+}
