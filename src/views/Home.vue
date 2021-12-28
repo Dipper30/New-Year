@@ -1,8 +1,9 @@
 <template>
   <div class="home">
-    <Header />
+    <Header @checkMessage="checkMessage" />
     <div id="main">
       <img src="../assets/bg.jpg" alt="bg" id="bg">
+      <message-box v-if="showMessages" @checkMessage="checkMessage"></message-box>
       <div class="count">
         <span> {{ $t('home.total', { total: len }) }} </span>
       </div>
@@ -16,6 +17,7 @@
 import Header from '../components/Header.vue'
 import WishBoard from '../components/WishBoard.vue'
 import PostBox from '../components/PostBox.vue'
+import MessageBox from '../components/MessageBox.vue'
 
 export default {
   name: 'Home',
@@ -23,10 +25,12 @@ export default {
     Header,
     WishBoard,
     PostBox,
+    MessageBox,
   },
   data () {
     return {
       len: 0,
+      showMessages: false,
     }
   },
   methods: {
@@ -36,6 +40,9 @@ export default {
     changeCount (newGreeting) {
       this.len = newGreeting.length
       console.log(newGreeting.length)
+    },
+    checkMessage (show = true) {
+      this.showMessages = show
     },
   },
 }

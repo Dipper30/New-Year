@@ -4,7 +4,7 @@
     <div class="options">
       <div class="item">
         <img class="icon" src="../assets/icon/msg.png" />
-        <div class="label msg">
+        <div class="label msg" @click="checkMessage">
           {{ $t('home.msg') }}
         </div>
       </div>
@@ -34,8 +34,11 @@
             <div class="s-text">
               {{ username ? username : $t('home.visitor') }}
             </div>
-            <div class="s-item" @click="showLogInDialog()">
+            <div v-if="!loggedIn" class="s-item" @click="showLogInDialog()">
               {{ $t('home.signIn') }}
+            </div>
+            <div v-else class="s-item" @click="signOut()">
+              {{ $t('home.signOut') }}
             </div>
           </div>
         </div>
@@ -47,6 +50,7 @@
 
 <script>
 import LogInDialog from './LogInDialog.vue'
+import api from '../request'
 
 export default {
   components: {
@@ -62,23 +66,45 @@ export default {
     username () {
       return this.$store.getters.getUserName
     },
+    news () {
+      return this.$store.getters.getNews
+    },
+    loggedIn () {
+      return Boolean(this.$store.getters.getUserName)
+    },
   },
   methods: {
     setLanguage (locale = 'en') {
       this.$i18n.locale = locale
-      this.s1 = this.$i18n.locale
+      this.modifyStyle(locale)
       localStorage.setItem('locale', locale)
+    },
+    modifyStyle (locale) {
+      locale = locale ? locale : this.$i18n.locale
+      if (!this.loggedIn && locale == 'en') this.s1 = 'long'
+      else this.s1 = 'short'
     },
     showLogInDialog () {
       this.dialogVisible = true
     },
     closeLogInDialog () {
       this.dialogVisible = false
+      this.modifyStyle()
+    },
+    async checkMessage () {
+      const { checkMessage: checkMessageAPI } = api
+      const res = await checkMessageAPI()
+      this.$store.commit('setNews', 0)
+      this.$emit('checkMessage')
+    },
+    signOut () {
+      this.$store.commit('setUser', null)
+      localStorage.removeItem('token')
+      this.modifyStyle()
     },
   },
   mounted () {
-    this.s1 = this.$i18n.locale
-    console.log(this.s1)
+    this.modifyStyle()
   },
 }
 </script>
@@ -96,6 +122,11 @@ export default {
   justify-content: space-between;
   align-items: center;
   color: $text-color;
+  .header-title {
+    padding-left: 40px;
+    font-size: 20px;
+    font-weight: 500;
+  }
   .options {
     display: flex;
     flex-direction: row;
@@ -136,10 +167,10 @@ export default {
         box-sizing: border-box;
         position: relative;
         transition: 0.1s;
-        &.en {
+        &.long {
           width: 190px;
         }
-        &.zh_cn {
+        &.short {
           width: 90px;
         }
         .s-text, .s-item {

@@ -3,17 +3,17 @@
     <div class="bg"></div>
     <div class="content">
       <p>Ummm... This page does not exist.</p>
-      <p><TButton type="light" class="to-home" @click="toHome">Click Me To Home</TButton></p>
+      <p><button type="light" class="to-home" @click="toHome">Click Me To Home</button></p>
     </div>
   </div>
 </template>
 
 <script>
-import TButton from '../components/common/TButton.vue'
+// import TButton from '../components/common/TButton.vue'
 
 export default {
   components: {
-    TButton,
+    // TButton,
   },
   methods: {
     toHome () {

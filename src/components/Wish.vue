@@ -198,8 +198,9 @@ export default {
     }
     .content {
       padding: 20px;
-      width: 84%;
-      min-width: 675px;
+      /* width: 84%; */
+      /* min-width: 675px; */
+      width: max-content;
       text-align: left;
       letter-spacing: 0.1em;
     }

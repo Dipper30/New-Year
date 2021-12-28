@@ -9,7 +9,7 @@
 
 <script>
 import api from '../request'
-import { handleResult } from '../utils'
+import { handleResult, isError } from '../utils'
 
 export default {
   data () {
@@ -22,7 +22,7 @@ export default {
       const { postGreeting } = api
       console.log(this.content)
       const res = await postGreeting({ content: this.content })
-      if (!handleResult(res, false)) return
+      if (isError(res)) return
       const { data } = res
       this.content = ''
       this.$emit('postNewGreeting', data[0])

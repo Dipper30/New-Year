@@ -6,7 +6,7 @@ export const mutations = {
   setUser: (state, user) => {
     state.user = user
   },
-  setCartItems: (state, items) => {
-    state.cartItems = items
+  setNews: (state, news) => {
+    state.news = news
   },
 }

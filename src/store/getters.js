@@ -12,6 +12,9 @@ export const getters = {
   //   return state.user || JSON.parse(localStorage.getItem('user'))
   // },
   getUserID: state => {
-    return state.user?.uid || Number(localStorage.getItem('userId'))
+    return state.user?.id || 0
+  },
+  getNews: state => {
+    return state.news
   },
 }
