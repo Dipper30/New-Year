@@ -13,7 +13,7 @@ export default {
   report: '举报',
   submit: '提交',
   total: '共计 {total} 条留言',
-  postGreeting: '留下你的寄语或祝福吧~',
+  postGreeting: '留下你的寄语或祝福吧~(1 ~ 150字)',
 
   dialog: {
     username: '留下你的名字吧',

@@ -13,7 +13,7 @@ export default {
   report: '報告する',
   submit: '参加する',
   total: '合計 {total} つの祝福',
-  postGreeting: 'メッセージや祝福を残してください〜',
+  postGreeting: 'メッセージや祝福を残してください〜 (1〜150語）',
   dialog: {
     username: 'あなたの名前を残してください',
     password: 'パスワードを入力してください',

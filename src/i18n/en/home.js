@@ -13,7 +13,7 @@ export default {
   report: 'Report',
   submit: 'Submit',
   total: '{total} wishes in total',
-  postGreeting: 'Post your wishes or blessings~',
+  postGreeting: 'Post your wishes or blessings~ (1 ~ 150words)',
   dialog: {
     username: 'Input Your Name',
     password: 'Input Password',

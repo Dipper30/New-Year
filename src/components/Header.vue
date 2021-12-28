@@ -3,9 +3,11 @@
     <div class="header-title">Happy New Year 2022</div>
     <div class="options">
       <div class="item">
-        <img class="icon" src="../assets/icon/msg.png" />
+          <img class="icon" src="../assets/icon/msg.png" />
+          
         <div class="label msg" @click="checkMessage">
           {{ $t('home.msg') }}
+          <span class="news"> {{ news }} </span>
         </div>
       </div>
       <div class="item s2">
@@ -99,6 +101,7 @@ export default {
     },
     signOut () {
       this.$store.commit('setUser', null)
+      this.$store.commit('setToken', null)
       localStorage.removeItem('token')
       this.modifyStyle()
     },
@@ -149,14 +152,35 @@ export default {
         width: 26px;
         height: 26px;
         margin-right: 15px;
-        
+        position: relative;
+        /* img {
+          width: 26px;
+          height: 26px;
+        } */
       }
       .label {
         font-size: 24;
         line-height: 28px;
         height: 28px;
         &.msg {
-          cursor: pointer
+          cursor: pointer;
+          position: relative;
+          .news {
+            position: absolute;
+            top: -6px;
+            right: -13px;
+            padding: 0px 2px;
+            background: #c43e3e;
+            color: #e5e5e5;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: center;
+            line-height: 12px;
+            font-size: 8px;
+            opacity: 0.9;
+            min-width: 10px;
+            height: 14px;
+          }
         }
       }
       .selector {
