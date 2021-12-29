@@ -9,7 +9,7 @@
       </div>
       <div class="name">
         <div class="quote" />
-        <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ user.username || $t('home.anonymous') }} </span>
+        <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ user?.username || $t('home.anonymous') }} </span>
       </div>
       <div class="input-box" v-if="isWriting" @keypress.enter="onReply">
         <input class="i" ref="input" type="text" v-model="reply" :placeholder="$t('home.reply')" />
@@ -79,7 +79,7 @@ export default {
       return this.wish.Comments
     },
     user () {
-      return this.wish.User || null
+      return this.wish?.User || null
     },
     uploadTime () {
       return formatTS(this.wish.uploadedAt, 'YYYY-MM-DD HH:mm')
@@ -212,6 +212,7 @@ export default {
       font-weight: 600;
       letter-spacing: 0.1rem;
       font-size: 20px;
+      word-break: break-all;
       .quote {
         position: absolute;
         height: 2px;
@@ -219,6 +220,7 @@ export default {
         background-color: #e5e5e5;
         top: 20px;
         left: 10px;
+        word-break: break-all;
       }
     }
     .input-box {

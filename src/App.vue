@@ -8,6 +8,8 @@ export default {
     const locale = localStorage.getItem('locale')
     if (locale) this.$i18n.locale = locale
     this.$store.dispatch('actUser')
+    this.$store.dispatch('fetchMessages')
+    console.log(this.$socket)
   },
 }
 </script>

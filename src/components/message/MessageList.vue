@@ -70,6 +70,7 @@ export default {
   padding: 20px 40px;
   height: 90%;
   width: 100%;
+  box-sizing: border-box;
   overflow: scroll;
   color: rgba(229, 229, 229, 0.3);
   .msg {

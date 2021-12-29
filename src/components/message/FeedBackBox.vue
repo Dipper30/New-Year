@@ -48,11 +48,11 @@ export default {
       }
       const { code, msg } = await postFeedback(p)
       this.lock = false
-      if (code != 10002 || code != 200 || code !=201) {
+      if (code != 10002 && code != 200 && code !=201) {
         this.$message.error(this.$t('message.feedback.notify_error') + '  msg: ' + msg)
       } else {
         this.clear()
-        this.$message.error(this.$t('message.feedback.notify_error'))
+        this.$message.error(this.$t('message.feedback.notify'))
       }
       // console.log(this.selectedTitle, this.content)
     },

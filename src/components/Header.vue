@@ -3,11 +3,10 @@
     <div class="header-title">Happy New Year 2022</div>
     <div class="options">
       <div class="item">
-          <img class="icon" src="../assets/icon/msg.png" />
-          
+        <img class="icon" src="../assets/icon/msg.png" />
         <div class="label msg" @click="checkMessage">
           {{ $t('home.msg') }}
-          <span class="news"> {{ news }} </span>
+          <span class="news" v-if="news>0"> {{ news }} </span>
         </div>
       </div>
       <div class="item s2">
@@ -104,6 +103,7 @@ export default {
       this.$store.commit('setToken', null)
       localStorage.removeItem('token')
       this.modifyStyle()
+      this.$router.go(0)
     },
   },
   mounted () {

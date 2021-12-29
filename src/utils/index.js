@@ -16,6 +16,9 @@ export const handleResult = (res, notifySuccess = true, notifyMessage = 'Success
     if (res?.code == 10003) {
       router.push('/no-auth')
     }
+    if (res?.code == 10002) {
+      return true
+    }
     ElMessage({
       message: res?.msg || 'error',
       type: 'error',

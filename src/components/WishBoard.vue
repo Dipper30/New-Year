@@ -36,10 +36,10 @@ export default {
         })
         return
       }
+      if (code == 304) return
       this.greetings = data
     },
     resetGreeting (newGreeting) {
-      console.log('reset', newGreeting)
       for (let i = 0; i < this.greetings.length; i++) {
         if (this.greetings[i].id == newGreeting.id) {
           this.greetings.splice(i, 1, newGreeting)
@@ -53,6 +53,9 @@ export default {
   },
   mounted () {
     this.fetchGreetings()
+    setInterval(() => {
+      this.fetchGreetings()
+    }, 10000)
   },
 }
 </script>
@@ -68,7 +71,7 @@ export default {
   overflow-y: scroll;
   overflow-x: hidden;
   padding: 20px;
-  min-height: 560px;
+  min-height: 530px;
   min-width: 900px;
   box-sizing: border-box;
   position: relative;

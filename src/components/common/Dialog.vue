@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="mask"></div>
-    <div class="dialog">
+    <div class="d-mask"></div>
+    <div class="d-dialog">
       <img class="cancel-icon" src="../../assets/icon/cancel.png" alt="" @click="close">
-      <div class="content">
+      <div class="d-content" :class="{'full': !showButtons}">
         <slot />
       </div>
-      <div class="btn-options">
+      <div class="d-btn-options" v-if="showButtons">
         <d-button t="cancel" @onClick="onCancel">
           {{ $t('home.dialog.cancel') }}
         </d-button>
@@ -24,6 +24,12 @@
 import DButton from './DButton.vue'
 
 export default {
+  props: {
+    showButtons: {
+      default: true,
+      type: Boolean,
+    },
+  },
   components: {
     DButton,
   },
@@ -42,7 +48,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mask {
+.d-mask {
   position: fixed;
   z-index: 1000;
   width: 100vw;
@@ -50,7 +56,7 @@ export default {
   top: 0;
   background: transparent;
 }
-.dialog {
+.d-dialog {
   position: absolute;
   height: 400px;
   width: 550px;
@@ -78,15 +84,18 @@ export default {
     top: 5px;
     cursor: pointer;
   }
-  .content {
+  .d-content {
     width: 80%;
     margin-top: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 70%;
+    &.full {
+      height: 100%;
+    }
   }
-  .btn-options {
+  .d-btn-options {
     margin: 20px 0 40px;
     display: flex;
     width: 80%;

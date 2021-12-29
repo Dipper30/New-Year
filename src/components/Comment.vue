@@ -2,7 +2,7 @@
   <div class="comment">
     <div class="mask" v-if="isWriting" @click="hideInput" />
     <div class="content" @click="showInput">
-      <span>{{ isRoot ? `` : ` - ` }} {{ user.username || $t('home.anonymous') }}&nbsp;:  &nbsp;&nbsp; <span class="text"> {{ comment.content }} </span></span>
+      <span>{{ isRoot ? `` : ` - ` }} {{ user?.username || $t('home.anonymous') }}&nbsp;:  &nbsp;&nbsp; <span class="text"> {{ comment.content }} </span></span>
       <div class="input-box" v-if="isWriting" @keypress.enter="onReply">
         <input class="i" ref="input" type="text" v-model="reply" :placeholder="$t('home.reply')" />
         <div class="btn" @click="onReply"> {{ $t('home.replyBtn') }} </div>
@@ -19,7 +19,7 @@
 
 <script>
 import api from '../request'
-import { handleResult } from '../utils'
+import { handleResult, isError } from '../utils'
 
 export default {
   name: 'Comment',
@@ -85,7 +85,7 @@ export default {
       }
       const { makeComment } = api
       const res = await makeComment({ content: this.reply, gid: this.gid, root: this.comment.id })
-      if (!handleResult(res, false)) return
+      if (isError(res)) return
       
       const { code, data } = res
       this.hideInput()

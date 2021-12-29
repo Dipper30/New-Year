@@ -15,8 +15,9 @@
     <div id="main">
       <img src="../assets/bg.jpg" alt="bg" id="bg">
       <message-box v-if="showMessages" @checkMessage="checkMessage"></message-box>
-      <div class="count">
-        <span> {{ $t('home.total', { total: len }) }} </span>
+      <div class="up-bar">
+        <div> <span> {{ $t('home.total', { total: len }) }} </span> </div>
+        <img class="refresh" src="../assets/icon/refresh.png" alt="" @click="fetchGreetings">
       </div>
       <wish-board ref="board" @changeCount="changeCount" />
       <post-box @postNewGreeting="postNewGreeting"></post-box>
@@ -51,6 +52,7 @@ export default {
       len: 0,
       showMessages: false,
       showLuckDialog: false,
+      lock: false,
     }
   },
   methods: {
@@ -63,6 +65,14 @@ export default {
     },
     checkMessage (show = true) {
       this.showMessages = show
+    },
+    fetchGreetings () {
+      if (this.lock) return
+      this.$refs.board.fetchGreetings()
+      setTimeout(() => {
+        this.lock = false
+      }, 3000)
+      
     },
     testLuck (open = true) {
       if (open && !this.$store.getters.getUser) {
@@ -155,17 +165,32 @@ export default {
       top: 68px;
       z-index: -1;
     }
-    .count {
-      color: $text-color;
-      padding: 30px 4px 10px;
-      text-align: left;
+    .up-bar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
       width: 74vw;
       min-width: 900px;
       margin: 0 auto;
-      span {
-        background-color: rgba(0, 0, 0, 0.7);
+      color: $text-color;
+      padding: 30px 4px 5px;
+      box-sizing: border-box;
+      .count {
+        padding: 30px 4px 10px;
+        text-align: left;
+        width: 100px;
+        margin: 0 auto;
+        span {
+          background-color: rgba(0, 0, 0, 0.7);
+        }
+      }
+      .refresh {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
       }
     }
+    
   }
 }
 </style>

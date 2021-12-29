@@ -40,3 +40,11 @@ export const checkMessage = (p) => {
 export const postFeedback = (p) => {
   return post('/feedback', p)
 }
+
+export const participate = (p) => {
+  return post('/participate', p)
+}
+
+export const checkParticipation = (p) => {
+  return get('/checkParticipation', p)
+}

@@ -80,6 +80,7 @@ export default {
         this.$store.commit('setUser', data.user)
         this.$store.commit('setToken', data.token)
         localStorage.setItem('token', data.token)
+        this.$store.dispatch('fetchMessages')
         this.onClose()
       }
       
