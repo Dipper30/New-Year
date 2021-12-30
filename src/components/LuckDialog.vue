@@ -1,22 +1,27 @@
 <template>
   <div id="luckDialog">
-    <Dialog class="l-dialog" :showButtons="false" @cancel="onCancel" @confirm="onConfirm">
-      <div class="intro">你只有一次抽选的机会喔~不过在抽奖过后你仍有机会查看所有卡牌</div>
+    <Dialog class="l-dialog" :showButtons="false" @close="onCancel" @cancel="onCancel" @confirm="onConfirm">
+      <div class="intro"> {{ $t('activity.luck.tip') }} </div>
       <div class="card-list">
         <luck-card
           @click="turnOver(i.id)"
           v-for="(i) of list"
           :ref="`card${i.id}`"
           :key="i.id"
-          :luck="i">
+          :luck="i"
+          :selected="selected"  
+        >
         </luck-card>
       </div>
-      <Dialog class="card-content-dialog" v-if="contentVisible" @confirm="closeContent" @cancel="closeContent">
+      <Dialog class="card-content-dialog" :cancel="$t('activity.luck.getImg')" v-if="contentVisible" @confirm="closeContent" @close="closeContent" @cancel="getImg">
         <div class="card-title">
-          {{ card[`title_${$i18n.locale}`] || '' }}卡
+          {{ card[`title_${$i18n.locale}`] || '' }}
         </div>
         <div class="card-desc">
           {{ card[`desc_${$i18n.locale}`] || '' }}
+        </div>
+        <div class="img-tip">
+          {{ $t('activity.luck.imgTip') }}
         </div>
       </Dialog>
       <!-- {{ $t('home.activity.tbd') }} -->
@@ -29,6 +34,7 @@ import Dialog from './common/Dialog.vue'
 import LuckCard from './activity/LuckCard.vue'
 import { luck as luckConfig } from '../config'
 import api from '../request'
+import { downloadImg } from '../utils'
 
 export default {
   components: {
@@ -44,6 +50,7 @@ export default {
       participated: false,
       contentVisible: false,
       card: null,
+      selected: 0,
     }
   },
   methods: {
@@ -62,7 +69,6 @@ export default {
       this.list.forEach(item => {
         if (item.id == id) {
           this.card = item
-          console.log('showcontent ',id, this.card)
           this.contentVisible = true
         } else return
       })
@@ -76,18 +82,21 @@ export default {
       await participateAPI(p)
     },
     turnOver (index = 0) {
-      console.log(index, this.lock, this.clicked)
       if (this.lock) return
       if (this.clicked) {
         this.showContent(index)
         return
       }
-      console.log('go here')
+
       if (this.participated) return
       this.participate(index)
       this.clicked = true
       this.lock = true
-      if (index != 0) this.$refs['card' + index].turnOver()
+      if (index != 0) {
+        this.$refs['card' + index].turnOver()
+        this.selected = index
+        this.downloadImg()
+      }
       this.timer = setTimeout(() => {
         this.turnOverRest(index)
       }, 2000)
@@ -102,6 +111,11 @@ export default {
       }
       this.lock = false
     },
+    getImg () {
+      // eslint-disable-next-line global-require
+      const url = require('../assets/taro-1.jpg')
+      downloadImg(url, '哀酱')
+    },
   },
   async created () {
     const { checkParticipation } = api
@@ -112,7 +126,7 @@ export default {
       for (let i of data) {
         if (i.aid === 1 && this.$store.getters.getUserID == i.uid) {
           this.participated = true
-          console.log('participated')
+          this.selected = Number(i.config)
           this.clicked = true
           this.$nextTick(() => {
             this.turnOverRest()
@@ -165,6 +179,17 @@ export default {
       font-size: 22px;
       font-weight: 500;
       letter-spacing: 20px;
+    }
+
+    .card-desc {
+      text-align: left;
+    }
+
+    .img-tip {
+      padding-top: 20px;
+      color: rgba(255, 255, 255, 0.3);
+      text-align: left;
+      font-size: 13px;
     }
   }
   

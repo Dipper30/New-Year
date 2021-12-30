@@ -8,7 +8,7 @@
       </div>
       <div class="d-btn-options" v-if="showButtons">
         <d-button t="cancel" @onClick="onCancel">
-          {{ $t('home.dialog.cancel') }}
+          {{ cancelText }}
         </d-button>
         <d-button @onClick="onConfirm">
           {{ $t('home.dialog.confirm') }}
@@ -29,16 +29,25 @@ export default {
       default: true,
       type: Boolean,
     },
+    cancel: {
+      default: '',
+      type: String,
+    },
   },
   components: {
     DButton,
+  },
+  computed: {
+    cancelText () {
+      return this.cancel ? this.cancel : this.$t('home.dialog.cancel')
+    },
   },
   methods: {
     onCancel () {
       this.$emit('cancel')
     },
     close () {
-      this.$emit('cancel')
+      this.$emit('close')
     },
     onConfirm () {
       this.$emit('confirm')

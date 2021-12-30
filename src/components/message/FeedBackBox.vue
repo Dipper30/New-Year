@@ -52,7 +52,7 @@ export default {
         this.$message.error(this.$t('message.feedback.notify_error') + '  msg: ' + msg)
       } else {
         this.clear()
-        this.$message.error(this.$t('message.feedback.notify'))
+        this.$message.success(this.$t('message.feedback.notify'))
       }
       // console.log(this.selectedTitle, this.content)
     },

@@ -1,6 +1,13 @@
 <template>
   <div id="header">
     <div class="header-title">Happy New Year 2022</div>
+    <div class="count-down" v-if="time>=0">
+      <span v-if="day > 1"> {{ day }} {{ $t('home.countDown.day') }} </span>
+      <span v-if="day == 1"> {{ day }} {{ $t('home.countDown.days') }} </span> &nbsp;
+      <span class="pad"> {{ hour }} </span> : 
+      <span class="pad"> {{ minute }} </span> : 
+      <span class="pad"> {{ second }} </span>
+    </div>
     <div class="options">
       <div class="item">
         <img class="icon" src="../assets/icon/msg.png" />
@@ -52,6 +59,8 @@
 <script>
 import LogInDialog from './LogInDialog.vue'
 import api from '../request'
+import { formatDate } from '../utils'
+import moment from 'moment'
 
 export default {
   components: {
@@ -61,6 +70,12 @@ export default {
     return {
       dialogVisible: false,
       s1: 'zh_cn',
+      clock: null,
+      // day: 0,
+      // hour: 0,
+      // minute: 0,
+      // second: 0,
+      time: 0,
     }
   },
   computed: {
@@ -72,6 +87,24 @@ export default {
     },
     loggedIn () {
       return Boolean(this.$store.getters.getUserName)
+    },
+    day () {
+      return Math.floor(this.time / (3600 * 24))
+    },
+    hour () {
+      let h = moment(this.time * 1000).hour()
+      if (h < 10) h = '0' + h
+      return h
+    },
+    minute () {
+      let m = moment(this.time * 1000).minute()
+      if (m < 10) m = '0' + m
+      return m
+    },
+    second () {
+      let s = moment(this.time * 1000).second()
+      if (s < 10) s = '0' + s
+      return s
     },
   },
   methods: {
@@ -105,9 +138,33 @@ export default {
       this.modifyStyle()
       this.$router.go(0)
     },
+    initClock (diff = 0) {
+      if (diff <= 0) {
+        clearInterval(this.clock)
+        this.clock = null
+        return
+      }
+      let time = diff
+      this.clock = setInterval(() => {
+        this.time = --time
+        if (time <= 0) {
+          clearInterval(this.clock)
+          this.clock = null
+          return
+        }
+        // this.day = Math.floor(time / (3600 * 24))
+        // this.hour = moment(time * 1000).hour()
+        // this.minute = moment(time * 1000).minute()
+        // this.second = moment(time * 1000).second()
+      }, 1000)
+    },
   },
   mounted () {
     this.modifyStyle()
+    const newYearTs = formatDate('2022-01-01 00:00:00').unix()
+    const currentTs = moment().unix()
+    const diff = newYearTs - currentTs
+    if (diff > 0) this.initClock(diff)
   },
 }
 </script>
@@ -122,7 +179,7 @@ export default {
   /* top: 0; */
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   color: $text-color;
   .header-title {
@@ -130,11 +187,25 @@ export default {
     font-size: 20px;
     font-weight: 500;
   }
+  .count-down {
+    margin-left: 20px;
+    .pad {
+      background: #e5e5e5;
+      padding: 0 4px;
+      border-radius: 5px;
+      color: #212121;
+      line-height: 26px;
+      height: 24px;
+      display: inline-block;
+      box-sizing: border-box;
+    }
+  }
   .options {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-left: auto;
     .item {
       display: flex;
       flex-direction: row;

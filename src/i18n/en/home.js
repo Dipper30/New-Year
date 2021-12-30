@@ -25,4 +25,10 @@ export default {
     'luck': 'Take a look at your new year\'s luck.',
     'tbd': 'Coming Soon~',
   },
+  countDown: {
+    'day': 'Day',
+    'days': 'Days',
+  },
+  commentRemoved: 'comment deleted',
+
 }

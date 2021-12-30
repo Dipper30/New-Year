@@ -1,12 +1,13 @@
 <template>
   <div id="board">
-    <Wish v-for="(item) of greetings" :key="item.id" :wish="item" @resetGreeting="resetGreeting" />
+    <Wish v-for="(item) of greetings" :key="item.id" :wish="item" @resetGreeting="resetGreeting" @removeGreeting="removeGreeting" />
   </div>
 </template>
 
 <script>
 import Wish from './Wish.vue'
 import api from '../request'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -15,6 +16,7 @@ export default {
   data () {
     return {
       greetings: [],
+      count: 0,
     }
   },
   watch: {
@@ -26,6 +28,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['fetchMessages']),
     async fetchGreetings () {
       const { getGreetings } = api
       const { code, data } = await getGreetings()
@@ -47,6 +50,14 @@ export default {
         }
       }
     },
+    removeGreeting (id = 0) {
+      for (let i = 0; i < this.greetings.length; i++) {
+        if (this.greetings[i].id == id) {
+          this.greetings.splice(i, 1)
+          break
+        }
+      }
+    },
     pushNewGreeting (newGreeting) {
       this.greetings.unshift(newGreeting)
     },
@@ -55,7 +66,11 @@ export default {
     this.fetchGreetings()
     setInterval(() => {
       this.fetchGreetings()
-    }, 10000)
+      if (this.count++ == 5) {
+        this.count = 0
+        this.fetchMessages() 
+      }
+    }, 15000)
   },
 }
 </script>

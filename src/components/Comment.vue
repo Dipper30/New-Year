@@ -1,9 +1,14 @@
 <template>
   <div class="comment">
     <div class="mask" v-if="isWriting" @click="hideInput" />
-    <div class="content" @click="showInput">
-      <span>{{ isRoot ? `` : ` - ` }} {{ user?.username || $t('home.anonymous') }}&nbsp;:  &nbsp;&nbsp; <span class="text"> {{ comment.content }} </span></span>
-      <div class="input-box" v-if="isWriting" @keypress.enter="onReply">
+    <div class="content" :class="{'showContent': !contentRemoved}" @click="showInput">
+      <span>{{ isRoot ? `` : ` - ` }} {{ user?.username || $t('home.anonymous') }}&nbsp;:  &nbsp;&nbsp;
+        <span class="text" v-if="!contentRemoved"> {{ comment.content }}</span>
+        <span class="text removed" v-else> {{ $t('home.commentRemoved') }}</span>
+        &nbsp;&nbsp;<span class="delete" v-if="isAuthor" @click.stop="deleteComment" />
+      </span>
+      
+      <div class="input-box" v-if="!contentRemoved && isWriting" @keypress.enter="onReply">
         <input class="i" ref="input" type="text" v-model="reply" :placeholder="$t('home.reply')" />
         <div class="btn" @click="onReply"> {{ $t('home.replyBtn') }} </div>
       </div>
@@ -18,6 +23,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import api from '../request'
 import { handleResult, isError } from '../utils'
 
@@ -44,6 +50,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['getUserID']),
     user () {
       return this.comment?.User || null
     },
@@ -52,6 +59,12 @@ export default {
     },
     isRoot () {
       return this.comment.root == 0
+    },
+    contentRemoved () {
+      return !this.comment?.visible
+    },
+    isAuthor () {
+      return !this.contentRemoved && this.comment.User.id == this.getUserID
     },
   },
   methods: {
@@ -91,8 +104,20 @@ export default {
       this.hideInput()
       this.$emit('resetGreeting', data[0])
     },
+    async deleteComment () {
+      const { deleteComment: deleteCommentAPI } = api
+      const p = {
+        cid: this.comment.id,
+        gid: this.gid,
+      }
+      const res = await deleteCommentAPI(p)
+      if (!handleResult(res)) return
+      const { data } = res
+      this.$emit('resetGreeting', data[0])
+    },
   },
   mounted () {
+    // console.log('uid', this.getUserID)
   },
 }
 </script>
@@ -117,17 +142,31 @@ export default {
     color: $text-color;
     line-height: 18px;
     font-size: 13px;
-    cursor: pointer;
+    cursor: default;
     padding: 4px 5px;
     box-sizing: border-box;
     border-radius: 5px;
     position: relative;
-    &:hover {
+    &.showContent:hover {
       background: #242424;
+      cursor: pointer;
       box-shadow: 2px 4px 8px 6px rgba(0, 0, 0, 0.25);
     }
     .text {
       color: rgba(229, 229, 229, 0.6);
+      &.removed {
+        /* color: rgba(229, 229, 229, 0.4); */
+        color: #676767;
+      }
+    }
+    .delete {
+      width: 18px;
+      height: 18px;
+      background: url('../assets/icon/delete.png') no-repeat;
+      background-size: contain;
+      display: inline-block;
+      transform: translateY(4px);
+      cursor: pointer;
     }
     
     .input-box {

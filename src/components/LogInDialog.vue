@@ -50,7 +50,6 @@ export default {
     },
     async onConfirm () {
       const valid = this.validate()
-      console.log(this.username.length)
       const u = {
         'en': 'The length of the username should be between 2 and 10~',
         'ja': 'ユーザー名の長さは2から10の間です〜',

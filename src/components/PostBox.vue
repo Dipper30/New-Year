@@ -4,6 +4,8 @@
     <div class="btn" @click="onSubmit">
       {{ $t('home.submit') }}
     </div>
+    <el-checkbox class="hide" v-model="anonymous" :label="$t('home.anonymous')" border></el-checkbox>
+
   </div>
 </template>
 
@@ -15,14 +17,16 @@ export default {
   data () {
     return {
       content: '',
+      anonymous: false,
+      hideName: false,
     }
   },
   methods: {
     async onSubmit () {
       const { postGreeting } = api
-      console.log(this.content)
-      const res = await postGreeting({ content: this.content })
-      if (isError(res)) return
+      const res = await postGreeting({ content: this.content, anonymous: this.anonymous })
+      if (!handleResult(res)) return
+      this.anonymous = false
       const { data } = res
       this.content = ''
       this.$emit('postNewGreeting', data[0])
@@ -31,13 +35,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped> 
+<style lang="scss"> 
 .post-box {
   min-width: 900px;
   width: 74vw;
   margin: 40px auto;
   display: flex;
   flex-direction: row;
+  position: relative;
   input {
     color: #333;
     font-size: 26px;
@@ -79,6 +84,7 @@ export default {
     box-sizing: border-box;
     box-shadow: 6px 5px 20px 1px rgba(100, 100, 100, 0.3);
     border-radius: 0px 10px 10px 0px;
+    position: relative;
     &:hover {
       /* background: #1F1F1F; */
       box-shadow: 6px 5px 13px 3px rgba(100, 100, 100, 0.6);
@@ -86,6 +92,24 @@ export default {
     &:active {
       box-shadow: inset 4px 4px 9px 5px rgba(0, 0, 0, 0.5);
     }
+  }
+  .hide {
+    position: absolute;
+    right: -155px;
+    top: 10px;
+    background: #212121;
+    border-color: $dark-green;
+    color: #a4a4a4;
+  }
+  .el-checkbox.is-bordered.is-checked {
+    border-color: $dark-green;
+  }
+  .el-checkbox__input.is-checked + .el-checkbox__label {
+    color: $green;
+  }
+  .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: $dark-green;
+    border-color: $dark-green;
   }
 }
 </style>

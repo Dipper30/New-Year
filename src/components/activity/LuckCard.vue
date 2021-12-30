@@ -1,12 +1,12 @@
 <template>
   <div :class="className">
     <div class="luck-card">
-      <div class="card-back"></div>
-      <div class="card-face">
-        <div class="title">
+      <div class="card-face" v-show="showFace">
+        <div class="title" :class="{ 'en': locale == 'en' }">
           {{ cardTitle }}
         </div>
       </div>
+      <div class="card-back"></div>
     </div>
   </div>
 </template>
@@ -18,23 +18,39 @@ export default {
       type: Object,
       default: null,
     },
+    selected: {
+      type: Number,
+      default: 0,
+    },
   },
   data () {
     return {
       turned: 'covered',
+      showFace: false,
     }
   },
   computed: {
+    locale () {
+      return this.$i18n.locale
+    },
     className () {
-      return 'luck-card-container ' + this.turned
+      return 'luck-card-container ' + this.turned + (this.selected == this.luck.id ? ' highlight' : '')
     },
     cardTitle () {
-      return this.luck[`title_${this.$i18n.locale}`] + '卡' || ''
+      return this.luck[`title_${this.locale}`] || ''
+    },
+    highlight () {
+      return this.selected == this.luck.id
     },
   },
   methods: {
     turnOver () {
-      this.turned = 'turned'
+      this.showFace = true
+      this.$nextTick(() => {
+        this.turned = 'turned'
+
+      })
+      
     },
   },
   mounted () {
@@ -52,6 +68,9 @@ export default {
   perspective: 800px;
   border-radius: 10px;
   cursor: pointer;
+  &.highlight {
+    box-shadow: 1px 6px 15px 8px rgba(184, 70, 2, 0.6);
+  }
   &.turned {
     .luck-card {
       transition: 2s;
@@ -93,7 +112,7 @@ export default {
     }
   } 
   .luck-card {
-    width: 115px;
+    width: 112px;
     height: 200px;
     border-radius: 10px;
     position: relative;
@@ -103,6 +122,7 @@ export default {
     .card-back {
       width: 110px;
       height: 210px;
+      background: #333;
       background: url('../../assets/taro.jpg') no-repeat;
       background-size: contain;
       z-index: 2;
@@ -123,10 +143,9 @@ export default {
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
-      
+      border-radius: 10px;
       .title {
         width: 30px;
-
         line-height: 30px;
         font-size: 28px;
         word-break: break-all;
@@ -139,6 +158,10 @@ export default {
         position: relative;
         background: rgba(0, 0, 0, 0.7);
         opacity: 0.9;
+        .en {
+          font-size: 18px;
+          width: 20px;
+        }
         ::before {
           content: ' ';
           position: absolute;

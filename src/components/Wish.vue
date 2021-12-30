@@ -8,13 +8,15 @@
         </span>
       </div>
       <div class="name">
-        <div class="quote" />
-        <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ user?.username || $t('home.anonymous') }} </span>
+         
+        <span class="anonymous" v-if="wish.anonymous"> {{ $t('home.anonymous') }} </span>
+        <span v-else> <span class="quote" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ user?.username || $t('home.anonymous') }} </span>
       </div>
       <div class="input-box" v-if="isWriting" @keypress.enter="onReply">
         <input class="i" ref="input" type="text" v-model="reply" :placeholder="$t('home.reply')" />
         <div class="btn" @click="onReply"> {{ $t('home.replyBtn') }} </div>
       </div>
+      <img v-if="isAuthor" class="delete" src="../assets/icon/delete.png" alt="" @click.stop="deleteGreeting">
     </div>
     
     <div class="desc">
@@ -57,6 +59,7 @@
 import Comment from './Comment.vue'
 import { formatTS, handleResult } from '../utils'
 import api from '../request'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -75,6 +78,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['getUserID']),
     comments () {
       return this.wish.Comments
     },
@@ -83,6 +87,9 @@ export default {
     },
     uploadTime () {
       return formatTS(this.wish.uploadedAt, 'YYYY-MM-DD HH:mm')
+    },
+    isAuthor () {
+      return this.getUserID == this.wish.uid
     },
   },
   methods: {
@@ -154,11 +161,20 @@ export default {
       
       const { code, data } = res
       this.hideInput()
-      this.$emit('resetGreeting', data[0])
+      if (data) this.$emit('resetGreeting', data[0])
+    },
+    async deleteGreeting () {
+      const { deleteGreeting: deleteGreetingAPI } = api
+      const p = {
+        gid: this.wish.id,
+      }
+      const res = await deleteGreetingAPI(p)
+      if (!handleResult(res)) return
+      // const { data } = res
+      this.$emit('removeGreeting', this.wish.id)
     },
   },
   mounted () {
-    console.log(this.wish)
   },
 }
 </script>
@@ -211,17 +227,29 @@ export default {
       position: relative;
       font-weight: 600;
       letter-spacing: 0.1rem;
-      font-size: 20px;
+      font-size: 18px;
       word-break: break-all;
+      color: #b9b9b9;
+      .anonymous {
+        color: #90b39a87;
+      }
       .quote {
         position: absolute;
         height: 2px;
-        width: 30px;
-        background-color: #e5e5e5;
-        top: 20px;
+        width: 25px;
+        background-color: #a4a4a4;
+        /* color: #b4d9bf87; */
+        top: 18px;
         left: 10px;
         word-break: break-all;
       }
+    }
+    .delete {
+      position: absolute;
+      right: -34px;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
     }
     .input-box {
       position: absolute;

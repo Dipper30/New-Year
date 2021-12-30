@@ -61,7 +61,6 @@ export default {
     },
     changeCount (newGreeting) {
       this.len = newGreeting.length
-      console.log(newGreeting.length)
     },
     checkMessage (show = true) {
       this.showMessages = show

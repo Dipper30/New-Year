@@ -7,6 +7,7 @@ export default {
   requestError: '请求出错',
   requestSuccess: '请求成功',
   anonymous: '不知名网友',
+  commentRemoved: '评论已删除',
   reply: '留下你的观点吧~',
   replyBtn: '回复',
   publish: '发布于 ',
@@ -21,6 +22,10 @@ export default {
     cancel: '取消',
     confirm: '确认',
     note: '如果您是首次登录，系统会自动为您注册账号喔~',
+  },
+  countDown: {
+    'day': '天',
+    'days': '天',
   },
   activity: {
     'luck': '康一康你的新年运势',
